@@ -48,7 +48,7 @@ jobs:
       - run: npm run build:sidecar
       - run: npm --prefix frontend run build
       - run: npm run build:electron
-      - run: npx electron-builder --mac zip
+      - run: npx electron-builder --mac zip --publish never
       - uses: actions/upload-artifact@v4
         with:
           name: classowl-mac
@@ -73,7 +73,7 @@ jobs:
       - run: npm run build:sidecar
       - run: npm --prefix frontend run build
       - run: npm run build:electron
-      - run: npx electron-builder --win nsis zip
+      - run: npx electron-builder --win nsis zip --publish never
       - uses: actions/upload-artifact@v4
         with:
           name: classowl-windows
