@@ -1,0 +1,510 @@
+/* 方案中心 — Clay 视觉（docs/design/design-system.md）：奶油底、coral 主行动色。
+   方案列表用列表行式（2026-08-07 定稿，仿真稿 designs/plan-center-v2/ 的 A 方向，原型未随仓库公开），
+   饱和色身份块轮换保留，样式沿用 styles.css 的变量与 .btn 体系 */
+
+/* 原型里 brand/steps/卡片按钮全是 div 或 button，不是链接；产品接入路由后
+   换成了 <NavLink>(<a>)，但原型 CSS 从未定义过 a 的默认样式，浏览器默认的
+   蓝色下划线会透出来，这里统一重置 */
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* 与 .app 同构：高度锁在视口内，滚动交给 .plan-main。
+   min-height:100vh 会把页面撑出视口，body 上就又长出滚动条。
+
+   底色用 --surface 奶油面而非全局 --bg：编辑型页面的底是 canvas 色。
+   五步工作区继续用 --bg 底，因为那里的多面板布局要靠底色差异分层，
+   首页只有一列列表，不需要这层区分。 */
+.plan-page {
+  height: 100%;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  background: var(--surface);
+}
+
+/* 首页顶栏同样兼作标题栏，规则与 .shell-top-row 一致（见 styles.css）。
+   顶栏不放品牌锁扣，只有右侧数据状态与设置入口；品牌在内容区。 */
+.plan-header {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  min-height: var(--titlebar-h);
+  padding: 6px var(--titlebar-inset-end) 6px var(--titlebar-inset);
+  border-bottom: 1px solid var(--line);
+  background: rgba(255, 250, 240, 0.92);
+  backdrop-filter: blur(8px);
+  -webkit-app-region: drag;
+}
+
+.plan-header a,
+.plan-header button { -webkit-app-region: no-drag; }
+
+/* 保存状态是后台同步指示，不是成功庆祝——用中性灰，不占成功绿；
+   只有保存失败才上色（红）。 */
+.save-state {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 500;
+}
+.save-state.error { color: var(--red); }
+
+.save-state svg { width: 15px; height: 15px; }
+
+/* 滚动容器（原来滚动发生在 body 上）。padding 走 .plan-main-inner，
+   直接给滚动容器加左右 padding 会让细滚动条贴在内容边上而非窗口边。 */
+.plan-main {
+  min-height: 0;
+  overflow: auto;
+}
+
+.plan-main-inner {
+  width: min(1080px, calc(100% - 36px));
+  margin: 0 auto;
+  padding: 32px 0 48px;
+}
+
+.plan-hero {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 32px;
+}
+
+.plan-hero h1 {
+  margin: 0 0 6px;
+  font-size: 34px;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+.plan-hero p {
+  max-width: 620px;
+  margin: 0;
+  color: var(--body);
+  line-height: 1.6;
+}
+
+.plan-hero-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+/* 空态引导卡：整块可点，是首次打开应用时唯一的动作。
+   发丝虚线边框而非实心色块——它是一个占位提示，不该比真实方案行更抢眼。
+   宽度收成一栏而不是撑满整行：撑满会得到一个 1000px 宽、120px 高的
+   虚线长条，读起来像加载失败的占位。 */
+.plan-empty {
+  display: grid;
+  justify-items: start;
+  gap: 8px;
+  width: min(100%, 420px);
+  padding: 28px;
+  border: 1px dashed var(--line-strong);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  color: var(--ink);
+  text-align: left;
+}
+
+.plan-empty:hover { border-color: var(--primary); }
+
+.plan-empty-mark {
+  display: grid;
+  width: 36px;
+  height: 36px;
+  place-items: center;
+  border-radius: var(--radius-pill);
+  background: var(--primary);
+  color: #fff;
+}
+
+.plan-empty-mark svg { width: 18px; height: 18px; }
+.plan-empty strong { font-size: 17px; font-weight: 500; }
+.plan-empty > span:last-child {
+  max-width: 56ch;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.section-heading {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 12px;
+}
+
+.section-heading h2 { margin: 0; font-size: 17px; }
+.section-heading > span { color: var(--faint); font-size: 12px; }
+
+/* —— 方案列表（列表行式） ——
+   列对齐 + 发丝分隔线是 SaaS 项目列表的读法；卡片在方案少时右侧永远空一块。
+   「继续编辑」hover / 键盘 focus 才浮出，页面静下来；整行可点可 Enter。 */
+.plan-list { border-top: 1px solid var(--line); }
+
+.plan-list-cols,
+.plan-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 110px 150px 130px 160px;
+  align-items: center;
+  gap: 16px;
+  padding: 0 14px;
+}
+
+.plan-list-cols {
+  height: 36px;
+  border-bottom: 1px solid var(--line);
+  color: var(--faint);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+}
+
+.plan-row {
+  height: 68px;
+  border-bottom: 1px solid var(--line);
+  cursor: pointer;
+}
+
+.plan-row:hover { background: var(--surface-soft); }
+.plan-row:focus-visible {
+  outline: none;
+  box-shadow: inset 0 0 0 2px var(--primary);
+}
+
+.plan-row-id {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+/* 饱和色身份块：Clay 的签名元素，只出现在方案中心这类呼吸区。
+   五色按行序轮换，一屏方案有节律而不单调。 */
+.plan-row-avatar {
+  display: grid;
+  width: 36px;
+  height: 36px;
+  flex: 0 0 36px;
+  place-items: center;
+  border-radius: 11px;
+  color: #fff;
+}
+
+.plan-row-avatar svg { width: 20px; height: 20px; }
+.tone-coral { background: var(--coral); }
+.tone-lavender { background: var(--lavender); }
+.tone-peach { background: var(--peach); }
+.tone-ochre { background: var(--ochre); }
+.tone-mint { background: var(--mint); }
+
+.plan-row-name { min-width: 0; }
+
+.plan-row-name h3 {
+  margin: 0 0 3px;
+  font-size: 14px;
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.plan-row-name span { color: var(--muted); font-size: 12px; }
+
+.plan-row-progress {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.plan-row-progress .progress-segs { width: 72px; margin: 0; }
+.plan-row-progress strong { color: var(--body); font-size: 12px; font-weight: 600; }
+
+.plan-row-time { color: var(--muted); font-size: 12px; }
+
+.plan-row-acts {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 6px;
+}
+
+.plan-row-go {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  height: 28px;
+  padding: 0 12px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  color: var(--ink);
+  font-size: 12px;
+  font-weight: 600;
+  opacity: 0;
+}
+
+.plan-row:hover .plan-row-go,
+.plan-row:focus-within .plan-row-go { opacity: 1; }
+.plan-row-go:hover { background: var(--ink); border-color: var(--ink); color: var(--surface); }
+.plan-row-go svg { width: 13px; height: 13px; }
+
+.plan-card-menu { position: relative; }
+
+.plan-card-menu button { border: 0; }
+
+.plan-action-menu {
+  position: absolute;
+  top: calc(100% + 4px);
+  right: 0;
+  z-index: 30;
+  min-width: 120px;
+  padding: 6px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  box-shadow: var(--shadow), 0 8px 20px rgba(24, 29, 38, 0.07);
+}
+
+.plan-action-menu button {
+  display: block;
+  width: 100%;
+  padding: 8px 10px;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--ink);
+  text-align: left;
+}
+
+.plan-action-menu button:hover { background: var(--surface-soft); }
+.plan-action-menu button.danger { color: var(--red); }
+
+.create-plan-options {
+  display: grid;
+  gap: 10px;
+}
+
+.create-plan-option {
+  display: grid;
+  gap: 4px;
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  color: var(--ink);
+  text-align: left;
+}
+
+.create-plan-option:hover:not(:disabled) { border-color: var(--blue); background: var(--blue-soft); }
+.create-plan-option:disabled { cursor: not-allowed; opacity: 0.5; }
+.create-plan-option span { color: var(--muted); font-size: 12px; }
+
+.import-levels {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.import-levels legend {
+  margin-bottom: 8px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.import-levels label {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 10px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+}
+
+.import-levels label:has(input:checked) { border-color: var(--blue); background: var(--blue-soft); }
+.import-levels input { margin-top: 3px; }
+.import-levels span { display: grid; gap: 2px; }
+.import-levels small { color: var(--muted); }
+
+.workspace-import {
+  display: flex;
+  justify-content: flex-end;
+  padding: 14px 18px 0;
+}
+
+.status-badge {
+  display: inline-flex;
+  padding: 2px 8px;
+  border: 1px solid var(--orange-border);
+  border-radius: var(--radius-pill);
+  background: var(--orange-soft);
+  color: var(--orange);
+  font-size: 11px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.status-badge.ready {
+  border-color: var(--green-border);
+  background: var(--green-soft);
+  color: var(--green);
+}
+
+.icon-button {
+  display: grid;
+  width: 32px;
+  height: 32px;
+  flex: 0 0 32px;
+  place-items: center;
+  border-radius: var(--radius-sm);
+  background: var(--surface-soft);
+  color: var(--muted);
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.icon-button:hover { background: var(--line); color: var(--ink); }
+
+/* 五段式进度：五步流程的进度天生是离散的，单条百分比条读不出「走到哪一步」。
+   已完成段墨色、当前段 coral（--primary 的第三处小面积用法）、未到来段浅底。 */
+.progress-segs {
+  display: flex;
+  gap: 5px;
+  margin: 7px 0 16px;
+}
+
+.progress-segs .seg {
+  flex: 1 1 0;
+  height: 5px;
+  border-radius: var(--radius-pill);
+  background: var(--line);
+}
+
+.progress-segs .seg.done { background: var(--ink); }
+.progress-segs .seg.now { background: var(--primary); }
+
+@media (max-width: 900px) {
+  /* 窄窗口先舍更新时间列：它在行里是最可推断的信息 */
+  .plan-list-cols,
+  .plan-row { grid-template-columns: minmax(0, 1fr) 100px 140px 150px; }
+  .plan-list-cols > :nth-child(4),
+  .plan-row-time { display: none; }
+}
+
+@media (max-width: 640px) {
+  .plan-main { width: min(100% - 24px, 1080px); padding-top: 24px; }
+  .plan-hero { align-items: stretch; flex-direction: column; }
+  .plan-list-cols { display: none; }
+  .plan-row { grid-template-columns: minmax(0, 1fr) 100px 40px; height: auto; padding: 12px 14px; }
+  .plan-row-progress,
+  .plan-row-time,
+  .plan-row-go { display: none; }
+  .save-state { display: none; }
+}
+
+/* —— 首访欢迎层（WelcomeScreen） ——
+   只在 0 方案且首访时出现；居中排版，三入口卡。 */
+.welcome-page { grid-template-rows: auto minmax(0, 1fr); }
+
+.welcome-top {
+  min-height: var(--titlebar-h);
+  -webkit-app-region: drag;
+}
+
+.welcome-main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  min-height: 0;
+  padding: 24px 24px 48px;
+  text-align: center;
+  overflow: auto;
+}
+
+.welcome-mark { width: 64px; height: 64px; margin-bottom: 18px; }
+
+.welcome-main h1 {
+  margin: 0 0 10px;
+  font-size: 30px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+.welcome-sub {
+  max-width: 460px;
+  margin: 0 0 32px;
+  color: var(--body);
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+.welcome-options {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  width: min(100%, 780px);
+}
+
+.welcome-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 22px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  text-align: left;
+}
+
+.welcome-card.featured {
+  border-color: var(--primary);
+  box-shadow: var(--focus-ring);
+}
+
+.welcome-card-avatar {
+  display: grid;
+  width: 40px;
+  height: 40px;
+  place-items: center;
+  border-radius: 11px;
+  color: #fff;
+  margin-bottom: 4px;
+}
+
+.welcome-card-avatar svg { width: 22px; height: 22px; }
+.welcome-card h3 { margin: 0; font-size: 15px; font-weight: 600; }
+.welcome-card p { margin: 0; color: var(--muted); font-size: 12px; line-height: 1.6; flex: 1; }
+
+.welcome-card-btn {
+  justify-content: center;
+  width: 100%;
+  margin-top: 12px;
+}
+
+.welcome-skip {
+  margin-top: 26px;
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.welcome-skip:hover { color: var(--ink); text-decoration: underline; }
+
+@media (max-width: 900px) {
+  .welcome-options { grid-template-columns: 1fr; width: min(100%, 420px); }
+}

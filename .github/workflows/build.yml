@@ -1,0 +1,55 @@
+name: Build
+
+"on":
+  push:
+    branches:
+      - main
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: astral-sh/setup-uv@v6
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - run: uv sync
+      - run: npm ci
+      - run: npm --prefix frontend ci
+      - run: uv run pytest -q
+      - run: npm --prefix frontend run test
+      - run: npm --prefix frontend run build
+      - run: npx tsc -p electron/tsconfig.json --noEmit
+
+  build-windows:
+    runs-on: windows-latest
+    needs: test
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: astral-sh/setup-uv@v6
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - run: uv sync
+      - run: npm ci
+      - run: npm --prefix frontend ci
+      - run: npm run build:sidecar
+      - run: npm --prefix frontend run build
+      - run: npm run build:electron
+      - run: npx electron-builder --win nsis zip
+      - uses: actions/upload-artifact@v4
+        with:
+          name: classowl-windows
+          path: |
+            dist/*.exe
+            dist/*.zip
+          if-no-files-found: error

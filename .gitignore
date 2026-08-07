@@ -1,0 +1,42 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Frontend dependencies
+node_modules/
+*.tsbuildinfo
+playwright-report/
+test-results/
+
+# Generated assets and build output
+backend/static/
+backend/timetable_app/static/
+build/
+dist/
+
+# Local runtime data
+data/
+backups/
+
+# Local files
+.DS_Store
+*.log
+
+# local
+.tmp/
+.claude/
+.agents/
+CLAUDE.md
+skills-lock.json
+handoff/
+designs/
+ref/
+SPEC.md
+resources/raw/

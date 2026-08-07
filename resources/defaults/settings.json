@@ -1,0 +1,12 @@
+{
+  "school_name": "",
+  "academic_year": "",
+  "term": "",
+  "port": 0,
+  "open_browser": true,
+  "idle_exit_minutes": 1,
+  "backup_count": 20,
+  "paper_size": "A4",
+  "orientation": "landscape",
+  "solver_seconds": 30
+}
