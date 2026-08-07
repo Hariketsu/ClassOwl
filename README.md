@@ -79,6 +79,8 @@ e2e 用 Playwright 的 `_electron.launch()` 启动真实应用，覆盖真 prelo
 
 Windows 安装包由 GitHub Actions 的 `Build` workflow 产出（推送到 `main`、提 PR 或手动触发，取 `classowl-windows` artifact）。
 
+发布正式版本：打 `v*` 标签（如 `git tag v0.1.0 && git push --tags`）会触发 `Release` workflow——先跑全部测试，再并行构建 macOS（arm64 zip，ad-hoc 签名）与 Windows（NSIS + zip），最后自动创建 GitHub Release 并附上产物与更新日志。
+
 ## 技术栈与架构
 
 - **界面**：Electron + React + TypeScript
@@ -102,4 +104,4 @@ Windows 安装包由 GitHub Actions 的 `Build` workflow 产出（推送到 `mai
 
 ## License
 
-[Apache-2.0](LICENSE)
+[Apache-2.0](LICENSE) · 第三方组件归属见 [NOTICE](NOTICE)

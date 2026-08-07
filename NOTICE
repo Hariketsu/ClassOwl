@@ -1,0 +1,74 @@
+ClassOwl
+Copyright 2026 Hariketsu
+
+This product includes software developed by third parties. The following
+components are bundled in the distributed application:
+
+Desktop shell
+-------------
+
+Electron
+  Copyright (c) OpenJS Foundation and other contributors
+  MIT License
+  https://github.com/electron/electron
+
+Frontend
+--------
+
+React and React DOM
+  Copyright (c) Meta Platforms, Inc. and affiliates
+  MIT License
+  https://github.com/facebook/react
+
+React Router
+  Copyright (c) Remix Software Inc.
+  MIT License
+  https://github.com/remix-run/react-router
+
+Phosphor Icons (@phosphor-icons/react)
+  Copyright (c) Phosphor Icons
+  MIT License
+  https://github.com/phosphor-icons/react
+
+Scheduling engine sidecar (Python)
+----------------------------------
+
+Google OR-Tools (ortools)
+  Copyright 2010-2025 Google LLC
+  Apache License 2.0
+  https://github.com/google/or-tools
+
+FastAPI
+  Copyright (c) Sebastián Ramírez
+  MIT License
+  https://github.com/fastapi/fastapi
+
+Uvicorn
+  Copyright (c) Encode OSS Ltd.
+  BSD 3-Clause License
+  https://github.com/encode/uvicorn
+
+openpyxl
+  Copyright (c) Eric Gazoni, Charlie Clark
+  MIT License
+  https://foss.heptapod.net/openpyxl/openpyxl
+
+python-docx
+  Copyright (c) Steve Canny
+  MIT License
+  https://github.com/python-openxml/python-docx
+
+ReportLab
+  Copyright (c) ReportLab Inc.
+  BSD 3-Clause License
+  https://www.reportlab.com
+
+python-multipart
+  Copyright (c) Andrew Dunham and contributors
+  Apache License 2.0
+  https://github.com/Kludex/python-multipart
+
+The sidecar is frozen with PyInstaller; its bootloader is licensed under
+GPL 2.0 with a special exception permitting unrestricted distribution of
+bundled applications.
+  https://github.com/pyinstaller/pyinstaller
