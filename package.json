@@ -24,7 +24,7 @@
     "test": "npm --prefix frontend run test",
     "build:electron": "tsc -p electron/tsconfig.json",
     "build:sidecar": "uv run pyinstaller --noconfirm --clean --distpath build/sidecar-dist --workpath build/sidecar-work electron/classowl.spec",
-    "dist:mac": "npm run build:sidecar && npm run build:electron && electron-builder --mac dir zip"
+    "dist:mac": "npm run build:sidecar && npm run build:electron && electron-builder --mac dir dmg"
   },
   "devDependencies": {
     "@types/node": "^24.1.0",
@@ -54,7 +54,7 @@
       "identity": "-",
       "target": [
         "dir",
-        "zip"
+        "dmg"
       ]
     },
     "win": {

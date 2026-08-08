@@ -26,7 +26,7 @@
 
 ### macOS（Apple Silicon）
 
-从 [Releases](https://github.com/Hariketsu/ClassOwl/releases) 下载 `ClassOwl-*-arm64-mac.zip`，解压后把 `ClassOwl.app` 拖入「应用程序」。
+从 [Releases](https://github.com/Hariketsu/ClassOwl/releases) 下载 `ClassOwl-*-arm64.dmg`，打开后把 `ClassOwl.app` 拖入「应用程序」。
 
 > 当前为 ad-hoc 签名，首次打开会被 Gatekeeper 拦截：右键 App →「打开」→「打开」即可；或在终端执行
 > `xattr -dr com.apple.quarantine /Applications/ClassOwl.app`。
@@ -75,11 +75,9 @@ e2e 用 Playwright 的 `_electron.launch()` 启动真实应用，覆盖真 prelo
 | `npm --prefix frontend run build` | `frontend/dist` |
 | `npm run build:electron` | `electron/dist` |
 | `npm run build:sidecar` | `build/sidecar-dist/classowl` |
-| `npm run dist:mac` | `dist/mac-arm64/ClassOwl.app` + zip |
+| `npm run dist:mac` | `dist/mac-arm64/ClassOwl.app` + dmg |
 
-Windows 安装包由 GitHub Actions 的 `Build` workflow 产出（推送到 `main`、提 PR 或手动触发，取 `classowl-windows` artifact）。
-
-发布正式版本：打 `v*` 标签（如 `git tag v0.1.0 && git push --tags`）会触发 `Release` workflow——先跑全部测试，再并行构建 macOS（arm64 zip，ad-hoc 签名）与 Windows（NSIS + zip），最后自动创建 GitHub Release 并附上产物与更新日志。
+Windows 安装包（NSIS `*.exe` / 便携 zip）在 Windows 上同样用 `npx electron-builder --win nsis zip` 构建；各平台安装包统一从 [Releases](https://github.com/Hariketsu/ClassOwl/releases) 获取。
 
 ## 技术栈与架构
 
