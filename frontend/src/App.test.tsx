@@ -87,6 +87,14 @@ describe('ClassOwl Flow', () => {
     for (const name of ['紧凑', '标准', '舒适', '特大']) expect(html).toContain(name)
   })
 
+  it('offers general, data and about sections in settings', () => {
+    const html = renderToStaticMarkup(
+      <MemoryRouter><SettingsPage /></MemoryRouter>,
+    )
+
+    for (const name of ['通用', '数据', '关于']) expect(html).toContain(name)
+  })
+
   it('renders the first-visit welcome with three entries', () => {
     const html = renderToStaticMarkup(
       <WelcomeScreen onSample={() => undefined} onBlank={() => undefined} onImport={() => undefined} onSkip={() => undefined} />,

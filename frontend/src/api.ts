@@ -4,11 +4,22 @@ import type { ParkItem, Placement, Workspace } from './workspace'
 /** preload 返回纯数据而非 Response：Response 跨 contextBridge 会丢方法。 */
 export type BridgeReply = { ok: boolean; status: number; body: unknown }
 
+export type SystemInfo = {
+  version: string
+  platform: string
+  dataDir: string
+}
+
 declare global {
   interface Window {
     classowl?: {
       request(path: string, init?: RequestInit): Promise<BridgeReply>
       onBackendCrashed?(callback: (stderr: string) => void): () => void
+      system?: {
+        quit?(): Promise<void>
+        info?(): Promise<SystemInfo>
+        openDataDir?(): Promise<string>
+      }
       dialog?: {
         saveExport(opts: {
           fileName: string

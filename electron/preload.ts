@@ -44,6 +44,8 @@ contextBridge.exposeInMainWorld("classowl", {
   },
   system: {
     quit: () => ipcRenderer.invoke("system:quit"),
+    info: () => ipcRenderer.invoke("system:info"),
+    openDataDir: () => ipcRenderer.invoke("system:open-data-dir"),
   },
   dialog: {
     saveExport: (options: {

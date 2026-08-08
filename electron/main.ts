@@ -1,7 +1,7 @@
 import { randomBytes } from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
-import { app, BrowserWindow, dialog, ipcMain, protocol } from "electron";
+import { app, BrowserWindow, dialog, ipcMain, protocol, shell } from "electron";
 import { assertTrustedSender } from "./security";
 import {
   Sidecar,
@@ -46,6 +46,23 @@ if (!app.requestSingleInstanceLock()) {
     assertTrustedSender(event.senderFrame?.url);
     if (!sidecar) throw new Error("Backend is not running");
     return { port: sidecar.port, token: sidecar.token };
+  });
+
+  // 设置页「关于/数据」：版本号与数据目录。
+  ipcMain.handle("system:info", (event) => {
+    assertTrustedSender(event.senderFrame?.url);
+    return {
+      version: app.getVersion(),
+      platform: process.platform,
+      dataDir: path.join(app.getPath("userData"), "data"),
+    };
+  });
+
+  ipcMain.handle("system:open-data-dir", async (event) => {
+    assertTrustedSender(event.senderFrame?.url);
+    const dir = path.join(app.getPath("userData"), "data");
+    fs.mkdirSync(dir, { recursive: true });
+    return shell.openPath(dir);
   });
 
   ipcMain.handle("dialog:save-export", async (event, options: {

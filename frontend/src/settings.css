@@ -1,5 +1,4 @@
-/* 设置页 — 左侧分类导航 + 右侧设置项。目前只有「显示」一节，
-   导航结构为后续小节（数据、关于等）预留。 */
+/* 设置页 — 左侧分类导航 + 右侧设置项：通用 / 数据 / 关于。 */
 
 /* 复用 .plan-header 的顶栏，但设置页左侧是返回链接而不是右对齐的状态 */
 .settings-header { justify-content: flex-start; }
@@ -26,11 +25,17 @@
   display: flex;
   align-items: center;
   gap: 9px;
+  width: 100%;
   padding: 8px 12px;
+  border: none;
   border-radius: var(--radius-sm);
+  background: transparent;
   color: var(--body);
+  font: inherit;
   font-size: 13px;
   font-weight: 500;
+  text-align: left;
+  cursor: pointer;
 }
 
 .settings-nav-item.on {
@@ -42,7 +47,15 @@
 .settings-nav-item svg { width: 16px; height: 16px; opacity: 0.7; }
 
 .settings-body { flex: 1; min-width: 0; padding-top: 6px; }
-.settings-body h2 { margin: 0 0 6px; font-size: 16px; font-weight: 600; }
+.settings-body h2 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 6px;
+  font-size: 16px;
+  font-weight: 600;
+}
+.settings-body h2 svg { width: 17px; height: 17px; opacity: 0.65; }
 
 .settings-hint {
   max-width: 640px;
@@ -51,6 +64,86 @@
   font-size: 13px;
   line-height: 1.7;
 }
+
+/* —— 数据 —— */
+
+.data-location {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  max-width: 640px;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+}
+
+.data-path {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  color: var(--body);
+  font-size: 12px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.data-location .ghost-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+/* —— 关于 —— */
+
+.settings-about {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 28px;
+  text-align: center;
+}
+
+.about-icon { border-radius: 22.37%; }
+
+.about-name { margin: 14px 0 2px; font-size: 22px; font-weight: 700; letter-spacing: -0.02em; }
+
+.about-version { margin: 0 0 16px; color: var(--muted); font-size: 13px; }
+
+.about-desc { margin-bottom: 22px; }
+
+.about-actions { display: flex; gap: 10px; margin-bottom: 18px; }
+
+.about-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 18px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  color: var(--ink);
+  font-size: 13px;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.about-btn:hover { border-color: var(--line-strong); }
+
+.about-links { display: flex; gap: 18px; }
+
+.about-links a {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--primary);
+  font-size: 12.5px;
+  text-decoration: none;
+}
+
+.about-links a:hover { text-decoration: underline; }
+.about-links a svg { width: 12px; height: 12px; opacity: 0.7; }
 
 .scale-opts {
   display: grid;

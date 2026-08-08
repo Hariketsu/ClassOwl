@@ -1,6 +1,6 @@
 {
   "name": "classowl",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "面向小学教务的离线排课桌面应用（Electron + React + Python CP-SAT）",
   "license": "Apache-2.0",
   "author": "Hariketsu",
