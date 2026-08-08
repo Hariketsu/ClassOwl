@@ -1,8 +1,10 @@
 # ClassOwl
 
-**面向小学教务的离线排课桌面应用。** 从班级作息到课表导出，五步走完整个排课流程；数据全部保存在本机，不联网。
+中小学教务排课应用，从班级作息到课表导出，五步走完整个排课流程。
 
 [![Build](https://github.com/Hariketsu/ClassOwl/actions/workflows/build.yml/badge.svg)](https://github.com/Hariketsu/ClassOwl/actions/workflows/build.yml)
+[![Release](https://img.shields.io/github/v/release/Hariketsu/ClassOwl)](https://github.com/Hariketsu/ClassOwl/releases)
+[![Platform](https://img.shields.io/badge/platform-macOS%20%7C%20Windows-lightgrey)](#下载安装)
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue)](LICENSE)
 
 | 方案中心 | 1 班级作息 |
