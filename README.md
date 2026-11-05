@@ -1,5 +1,8 @@
 # ClassOwl
 
+> [!NOTE]
+> 本项目暂停维护。现有版本可以继续下载使用，暂不处理 issue 和 PR。
+
 中小学教务排课应用，从班级作息到课表导出，五步走完整个排课流程。
 
 [![Build](https://github.com/Hariketsu/ClassOwl/actions/workflows/build.yml/badge.svg)](https://github.com/Hariketsu/ClassOwl/actions/workflows/build.yml)
